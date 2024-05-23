@@ -1,9 +1,5 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
-build/
-
 # Miscellaneous
 .DS_Store
