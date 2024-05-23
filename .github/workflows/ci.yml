@@ -71,18 +71,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Deploy to GitHub Pages
+    - name: Deploy with gh-pages
       run: |
-        git config --global user.email "amuvavi@gmail.com"
-        git config --global user.name "amuvavi"
-        git checkout -b temp-deploy-branch
-        # Ensure we are in the root directory
-        cd $GITHUB_WORKSPACE
-        # Print working directory
-        pwd
-        git add dist/*
-        git commit -m "Deploy to GitHub Pages"
-        git push origin HEAD:gh-pages --force
-        git checkout main
-        git branch -D temp-deploy-branch
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
