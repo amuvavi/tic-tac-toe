@@ -59,6 +59,9 @@ jobs:
 
     - name: Build the project
       run: yarn build
+      
+    - name: Verify dist directory
+      run: ls -la dist
 
   deploy:
     needs: build_and_test
