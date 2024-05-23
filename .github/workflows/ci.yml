@@ -9,14 +9,8 @@ on:
       - main
 
 jobs:
-  build_and_test:
+  build_and_deploy:
     runs-on: ubuntu-latest
-
-    services:
-      web:
-        image: node:16
-        ports:
-          - 5173:5173
 
     steps:
     - name: Checkout code
@@ -33,24 +27,6 @@ jobs:
     - name: Install Playwright browsers
       run: yarn playwright install
 
-    - name: Verify vitest installation
-      run: yarn list vitest
-
-    - name: Start the development server
-      run: |
-        yarn dev > server.log 2>&1 &
-        sleep 5
-        cat server.log
-
-    - name: Wait for server to be up
-      run: |
-        for i in $(seq 1 60); do
-          curl -s http://127.0.0.1:5173 > /dev/null && break
-          echo "Waiting for server... ($i)"
-          sleep 1
-        done
-        curl -s http://127.0.0.1:5173
-
     - name: Run unit tests
       run: yarn test:unit
 
@@ -60,18 +36,12 @@ jobs:
     - name: Build the project
       run: yarn build
 
-  deploy:
-    needs: build_and_test
-    runs-on: ubuntu-latest
+    - name: Verify build directory
+      run: ls -la build
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Deploy with gh-pages
-      run: |
-        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        yarn deploy -- -u "github-actions-bot <support+actions@github.com>"
+    - name: Deploy to GitHub Pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+      run: |
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        npx gh-pages -d build -u "github-actions-bot <support+actions@github.com>"
