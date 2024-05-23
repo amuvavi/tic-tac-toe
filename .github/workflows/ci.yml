@@ -41,14 +41,12 @@ jobs:
 
     - name: Start the development server
       run: |
-        cd tic-tac-toe
         yarn dev > server.log 2>&1 &
         sleep 5
         cat server.log
 
     - name: Wait for server to be up
       run: |
-        cd tic-tac-toe
         for i in $(seq 1 60); do
           curl -s http://127.0.0.1:5173 > /dev/null && break
           echo "Waiting for server... ($i)"
@@ -58,12 +56,10 @@ jobs:
 
     - name: Run unit tests
       run: |
-        cd tic-tac-toe
         yarn test:unit
 
     - name: Run e2e tests
       run: |
-        cd tic-tac-toe
         yarn test:e2e
 
     - name: Build the project
