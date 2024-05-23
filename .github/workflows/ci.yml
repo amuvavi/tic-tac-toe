@@ -80,7 +80,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         # Print working directory
         pwd
-        git add dist -f
+        git add dist/*
         git commit -m "Deploy to GitHub Pages"
         git push origin HEAD:gh-pages --force
         git checkout main
