@@ -9,14 +9,8 @@ on:
       - main
 
 jobs:
-  build_and_test:
+  build_and_deploy:
     runs-on: ubuntu-latest
-
-    services:
-      web:
-        image: node:16
-        ports:
-          - 5173:5173
 
     steps:
     - name: Checkout code
@@ -33,24 +27,6 @@ jobs:
     - name: Install Playwright browsers
       run: yarn playwright install
 
-    - name: Verify vitest installation
-      run: yarn list vitest
-
-    - name: Start the development server
-      run: |
-        yarn dev > server.log 2>&1 &
-        sleep 5
-        cat server.log
-
-    - name: Wait for server to be up
-      run: |
-        for i in $(seq 1 60); do
-          curl -s http://127.0.0.1:5173 > /dev/null && break
-          echo "Waiting for server... ($i)"
-          sleep 1
-        done
-        curl -s http://127.0.0.1:5173
-
     - name: Run unit tests
       run: yarn test:unit
 
@@ -60,18 +36,16 @@ jobs:
     - name: Build the project
       run: yarn build
 
-  deploy:
-    needs: build_and_test
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Verify dist directory
+      run: ls -la dist
 
     - name: Deploy to GitHub Pages
       run: |
         git config --global user.email "amuvavi@gmail.com"
         git config --global user.name "amuvavi"
+        git checkout -b temp-deploy-branch
         git add dist -f
         git commit -m "Deploy to GitHub Pages"
-        git push origin `git subtree split --prefix dist main`:gh-pages --force
+        git push origin `git subtree split --prefix dist temp-deploy-branch`:gh-pages --force
+        git checkout main
+        git branch -D temp-deploy-branch
