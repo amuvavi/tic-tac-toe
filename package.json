@@ -1,26 +1,25 @@
 {
-    "name": "tic-tac-toe",
-    "version": "1.0.0",
-    "homepage": "https://amuvavi.github.io/tic-tac-toe",
-    "scripts": {
-      "dev": "vite",
-      "test:unit": "vitest --config vitest.config.js",
-      "test:e2e": "playwright test",
-      "build": "vite build",
-      "deploy": "gh-pages -d build"
-    },
-    "devDependencies": {
-      "@playwright/test": "^1.13.0",
-      "playwright": "^1.13.0",
-      "vitest": "^0.34.6",
-      "vite": "^4.5.0",
-      "rollup": "^2.52.7",
-      "gh-pages": "^3.2.3",
-      "jsdom": "^22.0.0",
-      "wait-on": "^6.0.1"
-    },
-    "resolutions": {
-        "vite": "4.5.0" 
-      }
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "homepage": "https://amuvavi.github.io/tic-tac-toe",
+  "scripts": {
+    "dev": "vite",
+    "test:unit": "vitest --config vitest.config.js",
+    "test:e2e": "playwright test",
+    "build": "vite build",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.13.0",
+    "gh-pages": "^6.1.1",
+    "jsdom": "^22.0.0",
+    "playwright": "^1.13.0",
+    "rollup": "^2.52.7",
+    "vite": "^4.5.0",
+    "vitest": "^0.34.6",
+    "wait-on": "^6.0.1"
+  },
+  "resolutions": {
+    "vite": "4.5.0"
   }
-  
+}
