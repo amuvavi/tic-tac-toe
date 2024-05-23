@@ -36,14 +36,14 @@ jobs:
         sleep 5
         cat server.log
 
-        - name: Wait for server to be up
-        run: |
-          for i in `seq 1 60`; do
-            curl -s http://localhost:3000 && break
-            echo "Waiting for server... ($i)"
-            sleep 1
-          done
-          curl -s http://localhost:3000
+    - name: Wait for server to be up
+      run: |
+        for i in $(seq 1 60); do
+          curl -s http://localhost:3000 > /dev/null && break
+          echo "Waiting for server... ($i)"
+          sleep 1
+        done
+        curl -s http://localhost:3000
 
     - name: Run unit tests
       run: yarn test:unit
