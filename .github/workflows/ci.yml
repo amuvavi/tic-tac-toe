@@ -27,6 +27,9 @@ jobs:
       with:
         node-version: '16'
 
+    - name: Change to project directory
+      run: cd tic-tac-toe
+
     - name: Install dependencies
       run: yarn install
 
@@ -38,12 +41,14 @@ jobs:
 
     - name: Start the development server
       run: |
+        cd tic-tac-toe
         yarn dev > server.log 2>&1 &
         sleep 5
         cat server.log
 
     - name: Wait for server to be up
       run: |
+        cd tic-tac-toe
         for i in $(seq 1 60); do
           curl -s http://127.0.0.1:5173 > /dev/null && break
           echo "Waiting for server... ($i)"
@@ -52,13 +57,19 @@ jobs:
         curl -s http://127.0.0.1:5173
 
     - name: Run unit tests
-      run: yarn test:unit
+      run: |
+        cd tic-tac-toe
+        yarn test:unit
 
     - name: Run e2e tests
-      run: yarn test:e2e
+      run: |
+        cd tic-tac-toe
+        yarn test:e2e
 
     - name: Build the project
-      run: yarn build
+      run: |
+        cd tic-tac-toe
+        yarn build
 
   deploy:
     needs: build_and_test
@@ -67,6 +78,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Change to project directory
+      run: cd tic-tac-toe
 
     - name: Deploy with gh-pages
       run: |
