@@ -60,9 +60,6 @@ jobs:
     - name: Build the project
       run: yarn build
 
-    - name: Verify dist directory
-      run: ls -la dist
-
   deploy:
     needs: build_and_test
     runs-on: ubuntu-latest
@@ -74,7 +71,7 @@ jobs:
     - name: Deploy with gh-pages
       run: |
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        npm run deploy -- -u "github-actions-bot <support+actions@github.com>"
+        yarn deploy -- -u "github-actions-bot <support+actions@github.com>"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
