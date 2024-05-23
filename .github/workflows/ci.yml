@@ -30,6 +30,9 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
+    - name: Verify vitest installation
+      run: yarn list vitest
+
     - name: Start the development server
       run: |
         yarn dev > server.log 2>&1 &
