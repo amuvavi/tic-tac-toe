@@ -32,9 +32,9 @@ jobs:
 
     - name: Start the development server
       run: |
-        yarn dev &
+        yarn dev > server.log 2>&1 &
         sleep 5
-        curl -I http://localhost:3000
+        cat server.log
 
     - name: Wait for server to be up
       run: npx wait-on http://localhost:3000 --timeout 60000
