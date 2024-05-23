@@ -1,4 +1,4 @@
-name: build_and_test
+name: CI/CD
 
 on:
   push:
@@ -9,45 +9,61 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     services:
       web:
         image: node:16
-        options: --entrypoint /bin/sh
+        ports:
+          - 3001:3001
+        options: >-
+          --health-cmd="curl -f http://localhost:3001 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
-    - name: Check out code
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: 16
+        node-version: '16'
 
     - name: Install dependencies
-      run: npm install
+      run: yarn install
 
     - name: Start the development server
-      run: npm run start &
-      continue-on-error: true
+      run: yarn dev &
+      env:
+        CI: true
 
     - name: Wait for server to be up
-      run: sleep 10
+      run: npx wait-on http://localhost:3001
 
     - name: Run unit tests
-      run: npm run test:unit
+      run: yarn test:unit
 
     - name: Run e2e tests
-      run: npm run test:e2e
+      run: yarn test:e2e
 
     - name: Build the project
-      run: npm run build
+      run: yarn build
 
-    - name: Output Docker logs on failure
-      if: failure()
+  deploy:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to GitHub Pages
       run: |
-        echo "Container logs:"
-        docker ps -a
-        docker logs $(docker ps -a -q --filter "ancestor=node:16")
+        git config --global user.email "amuvavi@gmail.com"
+        git config --global user.name "amuvavi"
+        git add dist -f
+        git commit -m "Deploy to GitHub Pages"
+        git push origin `git subtree split --prefix dist main`:gh-pages --force
