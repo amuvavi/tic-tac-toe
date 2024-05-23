@@ -59,7 +59,7 @@ jobs:
 
     - name: Build the project
       run: yarn build
-      
+
     - name: Verify dist directory
       run: ls -la dist
 
@@ -73,10 +73,15 @@ jobs:
 
     - name: Deploy to GitHub Pages
       run: |
+        run: |
         git config --global user.email "amuvavi@gmail.com"
         git config --global user.name "amuvavi"
         git checkout -b temp-deploy-branch
+        # Ensure we are in the root directory
+        cd $GITHUB_WORKSPACE
         git add dist -f
         git commit -m "Deploy to GitHub Pages"
-        git push origin `git subtree split --prefix dist main`:gh-pages --force
+        git push origin `git subtree split --prefix dist temp-deploy-branch`:gh-pages --force
+        git checkout main
+        git branch -D temp-deploy-branch
   
