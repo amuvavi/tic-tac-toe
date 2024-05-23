@@ -78,6 +78,8 @@ jobs:
         git checkout -b temp-deploy-branch
         # Ensure we are in the root directory
         cd $GITHUB_WORKSPACE
+        # Print working directory
+        pwd
         git add dist -f
         git commit -m "Deploy to GitHub Pages"
         git push origin HEAD:gh-pages --force
