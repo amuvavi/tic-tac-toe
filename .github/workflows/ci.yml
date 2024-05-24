@@ -91,7 +91,7 @@ jobs:
       run: pwd
 
     - name: List root directory deploy
-      run: ls -al ./dist
+      run: ls -al 
 
     - name: Checkout gh-pages branch
       run: |
