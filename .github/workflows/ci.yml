@@ -98,7 +98,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: List gh-pages directory contents before copy
+    - name: List root directory contents before copy
       run: ls -al
 
     - name: Copy build files to gh-pages branch
@@ -110,7 +110,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: List gh-pages directory contents after copy
+    - name: List root directory contents after copy
       run: ls -al
 
     - name: Deploy to GitHub Pages
