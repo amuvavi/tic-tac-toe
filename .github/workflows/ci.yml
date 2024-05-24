@@ -100,9 +100,11 @@ jobs:
 
     - name: Copy build files to gh-pages branch
       run: |
-        cp -r ./dist/* .
+        rm -rf ./*
+        cp -r ../dist/* .
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
+      working-directory: .
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
