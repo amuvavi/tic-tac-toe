@@ -59,9 +59,9 @@ jobs:
 
     - name: Build the project
       run: yarn build
-    - name: List build directory contents
-      run: ls -al ./dist  
 
+    - name: List build directory contents
+      run: ls -al ./dist  # Verify the contents of the build directory
 
   deploy:
     needs: build_and_test
@@ -75,21 +75,40 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Ensure gh-pages branch exists
+      run: |
+        git fetch origin
+        if ! git rev-parse --verify origin/gh-pages; then
+          git checkout --orphan gh-pages
+          git reset --hard
+          git commit --allow-empty -m "Initial gh-pages commit"
+          git push origin gh-pages
+        fi
+
+    - name: Checkout gh-pages branch
+      run: |
+        git fetch origin
+        git checkout gh-pages
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-   
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Force add build files
       run: |
-        git checkout gh-pages
         cp -r ./dist/* .
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: ./dist  
+        publish_dir: ./dist  # Adjust this if your build output directory is different
