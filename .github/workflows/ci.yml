@@ -12,12 +12,6 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
-    services:
-      web:
-        image: node:16
-        ports:
-          - 5173:5173
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -93,18 +87,14 @@ jobs:
 
     - name: Checkout gh-pages branch
       run: |
-        git fetch origin
         git checkout gh-pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: List root directory contents before copy
-      run: ls -al
-
     - name: Copy build files to gh-pages branch
       run: |
         rm -rf ./*
-        cp -r $GITHUB_WORKSPACE/dist/* .
+        cp -r $GITHUB_WORKSPACE/dist/* $GITHUB_WORKSPACE
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
       env:
