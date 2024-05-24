@@ -166,10 +166,10 @@ The project includes a GitHub Actions workflow for CI/CD. The workflow runs on e
                 publish_branch: gh-pages
                 publish_dir: . 
 ## Deployment
-    The project is configured to deploy to GitHub Pages. To manually deploy the project, run:
+  The project is configured to deploy to GitHub Pages. To manually deploy the project, run:
 
-      yarn build
-      yarn deploy
+  `yarn build`
+  `yarn deploy`
 
         The deployment script will push the contents of the dist folder to the gh-pages branch.
 
@@ -198,10 +198,7 @@ The project includes a GitHub Actions workflow for CI/CD. The workflow runs on e
         ├── vite.config.js
         ├── vitest.config.js
         ├── yarn.lock
-        License
-        This project is licensed under the MIT License.
-
-
+      
 ### Notes:
 - Replace `your-repo-name` with your actual GitHub repository name.
 - Ensure that your `.github/workflows/ci.yml` file and other configuration files are correctly set up in your repository.
