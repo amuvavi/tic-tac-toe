@@ -27,9 +27,6 @@ jobs:
       with:
         node-version: '16'
 
-    - name: Change to project directory
-      run: cd tic-tac-toe
-
     - name: Install dependencies
       run: yarn install
 
@@ -55,17 +52,13 @@ jobs:
         curl -s http://127.0.0.1:5173
 
     - name: Run unit tests
-      run: |
-        yarn test:unit
+      run: yarn test:unit
 
     - name: Run e2e tests
-      run: |
-        yarn test:e2e
+      run: yarn test:e2e
 
     - name: Build the project
-      run: |
-        cd tic-tac-toe
-        yarn build
+      run: yarn build
 
   deploy:
     needs: build_and_test
@@ -75,14 +68,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Change to project directory
-      run: cd tic-tac-toe
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-    - name: Deploy with gh-pages
-      run: |
-        git config --global user.name "github-actions-bot"
-        git config --global user.email "support+actions@github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        npx gh-pages -d build -u "github-actions-bot <support+actions@github.com>"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./dist  # Adjust this if your build output directory is different

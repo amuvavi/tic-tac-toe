@@ -7,7 +7,7 @@
     "test:unit": "vitest --config vitest.config.js",
     "test:e2e": "playwright test",
     "build": "vite build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@playwright/test": "^1.13.0",
