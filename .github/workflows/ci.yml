@@ -73,24 +73,6 @@ jobs:
       with:
         node-version: '16'
 
-    - name: Configure Git
-      run: |
-        git config --global amuvavi "github-actions[bot]"
-        git config --global amuvavi@gmail.com "github-actions[bot]@users.noreply.github.com"
-
-    - name: Create gh-pages branch if it doesn't exist
-      run: |
-        git fetch origin
-        if ! git branch -r | grep 'origin/gh-pages'; then
-          git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initial gh-pages commit"
-          git push origin gh-pages
-        else
-          git checkout gh-pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
