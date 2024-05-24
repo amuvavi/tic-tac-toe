@@ -12,12 +12,6 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
-    services:
-      web:
-        image: node:16
-        ports:
-          - 5173:5173
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -63,6 +57,9 @@ jobs:
     - name: List build directory contents
       run: ls -al ./dist  # Verify the contents of the build directory
 
+    - name: Copy dist to temporary location
+      run: cp -r dist /tmp/dist
+
     - name: Configure Git
       run: |
         git config --global user.name "github-actions[bot]"
@@ -77,9 +74,6 @@ jobs:
           git commit --allow-empty -m "Initial gh-pages commit"
           git push origin gh-pages
         fi
-    
-    - name: List root directory contents before copy
-      run: ls -al
 
     - name: Checkout gh-pages branch
       run: |
@@ -90,7 +84,7 @@ jobs:
     - name: Copy build files to gh-pages branch
       run: |
         rm -rf ./*
-        cp -r dist/* .
+        cp -r /tmp/dist/* .
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
       env:
