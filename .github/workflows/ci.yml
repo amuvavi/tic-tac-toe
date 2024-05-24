@@ -98,15 +98,20 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: List gh-pages directory contents before copy
+      run: ls -al
+
     - name: Copy build files to gh-pages branch
       run: |
         rm -rf ./*
-        cp -r ../dist/* .
+        cp -r $GITHUB_WORKSPACE/dist/* .
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
-      working-directory: .
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: List gh-pages directory contents after copy
+      run: ls -al
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
