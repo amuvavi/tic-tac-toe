@@ -12,6 +12,12 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
+    services:
+      web:
+        image: node:16
+        ports:
+          - 5173:5173
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -54,11 +60,14 @@ jobs:
     - name: Build the project
       run: yarn build
 
-    - name: Print working directory (build-test)
-      run: pwd
-
     - name: List build directory contents
-      run: ls -al   
+      run: ls -al ./dist  # Verify the contents of the build directory
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: ./dist
 
   deploy:
     needs: build_and_test
@@ -67,6 +76,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: dist
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -87,11 +101,6 @@ jobs:
           git commit --allow-empty -m "Initial gh-pages commit"
           git push origin gh-pages
         fi
-    - name: Print working directory (deploy)
-      run: pwd
-
-    - name: List root directory deploy
-      run: ls -al 
 
     - name: Checkout gh-pages branch
       run: |
@@ -99,15 +108,15 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: List root directory contents before copy
+      run: ls -al
+
     - name: Copy build files to gh-pages branch
       run: |
-        if [ -d ./dist ]; then  # Check if dist directory exists
-          cp -r $GITHUB_WORKSPACE/dist/* ./
-          git add --all
-          git commit -m "deploy: ${{ github.sha }}"
-        else
-          echo "dist directory not found. Skipping copy."
-        fi
+        rm -rf ./*
+        cp -r dist/* .
+        git add --all
+        git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
