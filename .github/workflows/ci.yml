@@ -54,9 +54,6 @@ jobs:
     - name: Build the project
       run: yarn build
 
-    - name: List build directory contents
-      run: ls -al ./dist  # Verify the contents of the build directory
-
     - name: Copy dist to temporary location
       run: cp -r dist /tmp/dist
 
@@ -90,9 +87,6 @@ jobs:
         git push origin gh-pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: List root directory contents after copy
-      run: ls -al
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
