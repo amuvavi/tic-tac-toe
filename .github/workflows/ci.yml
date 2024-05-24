@@ -77,6 +77,9 @@ jobs:
           git commit --allow-empty -m "Initial gh-pages commit"
           git push origin gh-pages
         fi
+    
+    - name: List root directory contents before copy
+      run: ls -al
 
     - name: Checkout gh-pages branch
       run: |
