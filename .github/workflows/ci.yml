@@ -89,7 +89,10 @@ jobs:
         fi
     - name: Print working directory (deploy)
       run: pwd
-      
+
+    - name: List root directory deploy
+      run: ls -al ./dist
+
     - name: Checkout gh-pages branch
       run: |
         git checkout gh-pages
