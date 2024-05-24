@@ -98,13 +98,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Copy build files to root
+    - name: Copy build files to gh-pages branch
       run: |
         rm -rf ./*
         cp -r ../dist/* .
         git add --all
         git commit -m "deploy: ${{ github.sha }}" || echo "Nothing to commit"
-      working-directory: ./dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -113,4 +112,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: ./dist 
+        publish_dir: ./dist  
