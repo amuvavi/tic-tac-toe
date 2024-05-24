@@ -12,12 +12,6 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
 
-    services:
-      web:
-        image: node:16
-        ports:
-          - 5173:5173
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -60,8 +54,11 @@ jobs:
     - name: Build the project
       run: yarn build
 
+    - name: Print working directory (build-test)
+      run: pwd
+
     - name: List build directory contents
-      run: ls -al ./dist  # Verify the contents of the build directory
+      run: ls -al ./dist
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
@@ -102,14 +99,17 @@ jobs:
           git push origin gh-pages
         fi
 
+    - name: Print working directory (deploy)
+      run: pwd
+
+    - name: List root directory before deploy
+      run: ls -al
+
     - name: Checkout gh-pages branch
       run: |
         git checkout gh-pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: List root directory contents before copy
-      run: ls -al
 
     - name: Copy build files to gh-pages branch
       run: |
